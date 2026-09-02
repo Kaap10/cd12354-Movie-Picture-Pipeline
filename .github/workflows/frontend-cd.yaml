@@ -13,7 +13,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REGISTRY: 376302487729.dkr.ecr.us-east-1.amazonaws.com
   ECR_REPOSITORY: frontend
-  REACT_APP_MOVIE_API_URL: ${{ vars.REACT_APP_MOVIE_API_URL }}
+  REACT_APP_MOVIE_API_URL: ${{ vars.REACT_APP_MOVIE_API_URL || 'http://localhost:5000' }}
 
 jobs:
   lint:
@@ -77,7 +77,7 @@ jobs:
 
       - name: Verify frontend API URL
         run: |
-          if [ -z "${{ vars.REACT_APP_MOVIE_API_URL }}" ]; then
+          if [ -z "${{ env.REACT_APP_MOVIE_API_URL }}" ]; then
             echo "ERROR: REACT_APP_MOVIE_API_URL is empty"
             exit 1
           else
@@ -98,7 +98,7 @@ jobs:
         working-directory: starter/frontend
         run: |
           docker build \
-            --build-arg REACT_APP_MOVIE_API_URL="${{ vars.REACT_APP_MOVIE_API_URL }}" \
+            --build-arg REACT_APP_MOVIE_API_URL="${{ env.REACT_APP_MOVIE_API_URL }}" \
             --tag "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" \
             .
 
