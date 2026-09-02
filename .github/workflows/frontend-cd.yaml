@@ -75,6 +75,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify frontend API URL
+        run: |
+          if [ -z "${{ vars.REACT_APP_MOVIE_API_URL }}" ]; then
+            echo "ERROR: REACT_APP_MOVIE_API_URL is empty"
+            exit 1
+          else
+            echo "REACT_APP_MOVIE_API_URL is configured"
+          fi
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
